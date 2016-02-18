@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<integer name="voice">10000</integer>
+	<integer name="toutenn">10001</integer>
+	<integer name="kutenn">10002</integer>
+	<integer name="kaigyou">10003</integer>
+	<integer name="kakko">10004</integer>
+	<integer name="kakkotozi">10005</integer>
+	<integer name="tab">10006</integer>
+	<integer name="delete">10007</integer>
+	<integer name="tenntenntenn">10008</integer>
+</resources>

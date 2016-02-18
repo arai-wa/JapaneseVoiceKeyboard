@@ -1,0 +1,26 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+		  package="com.example.input.voice">
+
+	<uses-permission android:name="android.permission.RECORD_AUDIO"/>
+	<uses-permission android:name="android.permission.INTERNET"/>
+
+	<application
+			android:allowBackup="true"
+			android:label="@string/app_name">
+
+		<service android:name=".VoiceKeyboardService"
+				 android:permission="android.permission.BIND_INPUT_METHOD">
+			<intent-filter>
+				<action android:name="android.view.InputMethod"/>
+			</intent-filter>
+			<meta-data android:name="android.view.im"
+					   android:resource="@xml/method"/>
+		</service>
+		<activity
+				android:name=".RequestPermissionActivity"
+				android:label="@string/app_name">
+		</activity>
+
+	</application>
+
+</manifest>
