@@ -9,9 +9,7 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.inputmethod.InputConnection;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -19,19 +17,20 @@ import com.example.input.voice.util.Log;
 
 import java.util.ArrayList;
 
+//FIXME このクラスでハードコーディングしている文字列が多くなってきたらstrings.xmlに定義する
 public class VoiceKeyboardActionListener implements KeyboardView.OnKeyboardActionListener, RecognitionListener {
 
 	private final InputMethodService SERVICE;
 
 
 	private final SpeechRecognizer SPEECH_RECOGNIZER;
-	private final ListView VOICES;
+	private final ListView MESSAGES;
 
-	protected VoiceKeyboardActionListener(InputMethodService service, ListView voices) {
+	protected VoiceKeyboardActionListener(InputMethodService service, ListView messages) {
 		SPEECH_RECOGNIZER = SpeechRecognizer.createSpeechRecognizer(service.getApplicationContext());
 		SPEECH_RECOGNIZER.setRecognitionListener(this);
 		this.SERVICE = service;
-		this.VOICES = voices;
+		this.MESSAGES = messages;
 	}
 
 	@Override
@@ -67,6 +66,21 @@ public class VoiceKeyboardActionListener implements KeyboardView.OnKeyboardActio
 
 		} else if (primaryCode == resources.getInteger(R.integer.tenntenntenn)) {
 			currentInputConnection.commitText("……", 1);
+
+		} else if (primaryCode == resources.getInteger(R.integer.space)) {
+			currentInputConnection.commitText("　", 1);
+
+		} else if (primaryCode == resources.getInteger(R.integer.maru_kakko)) {
+			currentInputConnection.commitText("（", 1);
+
+		} else if (primaryCode == resources.getInteger(R.integer.maru_kakkotozi)) {
+			currentInputConnection.commitText("）", 1);
+
+		} else if (primaryCode == resources.getInteger(R.integer.bikkuri)) {
+			currentInputConnection.commitText("！", 1);
+
+		} else if (primaryCode == resources.getInteger(R.integer.hatena)) {
+			currentInputConnection.commitText("？", 1);
 
 		} else {
 			Toast.makeText(SERVICE, "invalid primary code: " + primaryCode, Toast.LENGTH_SHORT).show();
@@ -109,12 +123,16 @@ public class VoiceKeyboardActionListener implements KeyboardView.OnKeyboardActio
 
 	@Override
 	public void onReadyForSpeech(Bundle bundle) {
-		Log.d("ready");
+		String[] a = {"音声入力してください"};
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(SERVICE, R.layout.message_element, a);
+		MESSAGES.setAdapter(adapter);
 	}
 
 	@Override
 	public void onBeginningOfSpeech() {
-		Log.d("beginning of speech");
+		String[] a = {"音声入力中"};
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(SERVICE, R.layout.message_element, a);
+		MESSAGES.setAdapter(adapter);
 	}
 
 	@Override
@@ -124,60 +142,68 @@ public class VoiceKeyboardActionListener implements KeyboardView.OnKeyboardActio
 	@Override
 	public void onBufferReceived(byte[] bytes) {
 		Log.d(new String(bytes));
-
 	}
 
 	@Override
 	public void onEndOfSpeech() {
-		Log.d("end of speech");
+		String[] a = {"変換中"};
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(SERVICE, R.layout.message_element, a);
+		MESSAGES.setAdapter(adapter);
 	}
 
 	@Override
 	public void onError(int error) {
-		//FIXME handle errors
+		ArrayList<String> errorMessages = new ArrayList<>();
+		errorMessages.add("エラーが発生しました。");
+		errorMessages.add("code:" + error);
+
 		switch (error) {
 			case SpeechRecognizer.ERROR_AUDIO:
+				errorMessages.add("音声の録音に失敗しました");
 				break;
 			case SpeechRecognizer.ERROR_CLIENT:
+				errorMessages.add("その他のアプリのエラーです");
 				break;
 			case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
+				errorMessages.add("権限が不足しています");
 				break;
 			case SpeechRecognizer.ERROR_NETWORK:
-				Log.e("network error");
+				errorMessages.add("ネットワーク関連のエラーです");
 				break;
 			case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
-				Log.e("network timeout");
+				errorMessages.add("通信がタイムアウトしました");
 				break;
 			case SpeechRecognizer.ERROR_NO_MATCH:
+				errorMessages.add("音声にマッチする変換結果を見つけられませんでした");
 				break;
 			case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
+				errorMessages.add("音声認識がビジーです");
 				break;
 			case SpeechRecognizer.ERROR_SERVER:
+				errorMessages.add("Googleのサーバ側のエラーです");
 				break;
 			case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
-				Toast.makeText(SERVICE, "speech timeout", Toast.LENGTH_LONG).show();
-				Log.e("speech timeout");
+				errorMessages.add("音声入力がありませんでした");
 				break;
 			default:
+				errorMessages.add("分類不能なエラーです");
 		}
+
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(SERVICE, R.layout.error_element, errorMessages);
+		MESSAGES.setAdapter(adapter);
 	}
 
 	@Override
 	public void onResults(Bundle results) {
 		final ArrayList<String> voices = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
 
-		for (String voice : voices) {
-			Log.d(voice);
-		}
+		voices.forEach(Log::d);
 
-		ArrayAdapter<String> adapter = new ArrayAdapter<>(SERVICE, R.layout.voice, voices);
-		VOICES.setAdapter(adapter);
-		VOICES.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-				SERVICE.getCurrentInputConnection().commitText(voices.get(i), 1);
-				VOICES.setAdapter(new ArrayAdapter<>(SERVICE, R.layout.voice, new ArrayList<String>()));
-			}
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(SERVICE, R.layout.list_element, voices);
+		MESSAGES.setAdapter(adapter);
+		MESSAGES.setOnItemClickListener((adapterView, view, i, l) -> {
+			SERVICE.getCurrentInputConnection().commitText(voices.get(i), 1);
+			MESSAGES.setAdapter(new ArrayAdapter<>(SERVICE, R.layout.list_element, new ArrayList<String>()));
 		});
 	}
 

@@ -6,7 +6,7 @@
 		android:orientation="vertical">
 
 	<ListView
-			android:id="@+id/voices"
+			android:id="@+id/messages"
 			android:layout_height="wrap_content"
 			android:layout_alignParentBottom="true"
 			android:layout_width="match_parent"/>

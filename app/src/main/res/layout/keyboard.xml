@@ -6,18 +6,27 @@
 		  android:layout_height="@dimen/keyboard_view"
 		  android:layout_width="match_parent">
 
+
 	<Row>
-		<Key android:codes="@integer/tab" android:keyLabel="tab" android:keyWidth="20%p"/>
+		<Key android:codes="@integer/space" android:keyLabel="\u2423" android:keyWidth="20%p"/>
 		<Key android:codes="@integer/tenntenntenn" android:keyLabel="……" android:keyWidth="20%p"/>
-		<Key android:codes="@integer/voice" android:keyLabel="voice" android:keyWidth="40%p"/>
-		<Key android:codes="@integer/delete" android:keyLabel="delete" android:keyWidth="20%p"/>
+		<Key android:codes="@integer/voice" android:keyLabel="Voice" android:keyWidth="40%p"/>
+		<Key android:codes="@integer/delete" android:keyLabel="Delete" android:keyWidth="20%p"/>
 	</Row>
 
 	<Row>
-		<Key android:codes="@integer/toutenn" android:keyLabel="、" android:keyWidth="20%p"/>
-		<Key android:codes="@integer/kutenn" android:keyLabel="。" android:keyWidth="20%p"/>
+		<Key android:codes="@integer/maru_kakko" android:keyLabel="（" android:keyWidth="20%p"/>
+		<Key android:codes="@integer/maru_kakkotozi" android:keyLabel="）" android:keyWidth="20%p"/>
+		<Key android:codes="@integer/bikkuri" android:keyLabel="！" android:keyWidth="20%p"/>
+		<Key android:codes="@integer/hatena" android:keyLabel="？" android:keyWidth="20%p"/>
+		<Key android:codes="@integer/tab" android:keyLabel="tab" android:keyWidth="20%p"/>
+	</Row>
+
+	<Row>
 		<Key android:codes="@integer/kakko" android:keyLabel="「" android:keyWidth="20%p"/>
 		<Key android:codes="@integer/kakkotozi" android:keyLabel="」" android:keyWidth="20%p"/>
-		<Key android:codes="@integer/kaigyou" android:keyLabel="改行" android:keyWidth="20%p"/>
+		<Key android:codes="@integer/toutenn" android:keyLabel="、" android:keyWidth="20%p"/>
+		<Key android:codes="@integer/kutenn" android:keyLabel="。" android:keyWidth="20%p"/>
+		<Key android:codes="@integer/kaigyou" android:keyLabel="Enter" android:keyWidth="20%p"/>
 	</Row>
 </Keyboard>

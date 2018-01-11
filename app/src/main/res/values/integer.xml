@@ -9,4 +9,9 @@
 	<integer name="tab">10006</integer>
 	<integer name="delete">10007</integer>
 	<integer name="tenntenntenn">10008</integer>
+	<integer name="space">10009</integer>
+	<integer name="maru_kakko">10010</integer>
+	<integer name="maru_kakkotozi">10011</integer>
+	<integer name="bikkuri">10012</integer>
+	<integer name="hatena">10013</integer>
 </resources>

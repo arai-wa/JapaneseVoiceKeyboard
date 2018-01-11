@@ -34,10 +34,11 @@ public class VoiceKeyboardService extends InputMethodService {
 	public View onCreateInputView() {
 		View inputView = getLayoutInflater().inflate(R.layout.input, null);
 
-		ListView voices = (ListView) inputView.findViewById(R.id.voices);
-		VoiceKeyboardView keyboard = (VoiceKeyboardView) inputView.findViewById(R.id.keyboard);
+		ListView messages = inputView.findViewById(R.id.messages);
+
+		VoiceKeyboardView keyboard = inputView.findViewById(R.id.keyboard);
 		keyboard.setKeyboard(mMyKeyboard);
-		keyboard.setOnKeyboardActionListener(new VoiceKeyboardActionListener(this, voices));
+		keyboard.setOnKeyboardActionListener(new VoiceKeyboardActionListener(this, messages));
 
 		int permission = checkCallingOrSelfPermission(Manifest.permission.RECORD_AUDIO);
 		boolean permitted = permission == PackageManager.PERMISSION_GRANTED;
