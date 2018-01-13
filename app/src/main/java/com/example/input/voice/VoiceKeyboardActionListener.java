@@ -17,31 +17,39 @@ import com.example.input.voice.util.Log;
 
 import java.util.ArrayList;
 
-//FIXME このクラスでハードコーディングしている文字列が多くなってきたらstrings.xmlに定義する
+//FIXME このクラスでハードコーディングしているテキストが多くなってきたらstrings.xmlに定義する
 public class VoiceKeyboardActionListener implements KeyboardView.OnKeyboardActionListener, RecognitionListener {
 
 	private final InputMethodService SERVICE;
-
-
-	private final SpeechRecognizer SPEECH_RECOGNIZER;
 	private final ListView MESSAGES;
+	private SpeechRecognizer speechRecognizer;
 
 	protected VoiceKeyboardActionListener(InputMethodService service, ListView messages) {
-		SPEECH_RECOGNIZER = SpeechRecognizer.createSpeechRecognizer(service.getApplicationContext());
-		SPEECH_RECOGNIZER.setRecognitionListener(this);
 		this.SERVICE = service;
 		this.MESSAGES = messages;
 	}
 
 	@Override
 	public void onKey(int primaryCode, int[] keyCodes) {
+	}
+
+	private void keyDownUp(int keyEventCode) {
+		InputConnection currentInputConnection = SERVICE.getCurrentInputConnection();
+		currentInputConnection.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, keyEventCode));
+		currentInputConnection.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, keyEventCode));
+	}
+
+	@Override
+	public void onPress(int primaryCode) {
 		Resources resources = SERVICE.getResources();
 		InputConnection currentInputConnection = SERVICE.getCurrentInputConnection();
 
 		if (primaryCode == resources.getInteger(R.integer.voice)) {
 			Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 			intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-			SPEECH_RECOGNIZER.startListening(intent);
+			speechRecognizer = SpeechRecognizer.createSpeechRecognizer(SERVICE.getApplicationContext());
+			speechRecognizer.setRecognitionListener(this);
+			speechRecognizer.startListening(intent);
 
 		} else if (primaryCode == resources.getInteger(R.integer.delete)) {
 			keyDownUp(KeyEvent.KEYCODE_DEL);
@@ -85,16 +93,6 @@ public class VoiceKeyboardActionListener implements KeyboardView.OnKeyboardActio
 		} else {
 			Toast.makeText(SERVICE, "invalid primary code: " + primaryCode, Toast.LENGTH_SHORT).show();
 		}
-	}
-
-	private void keyDownUp(int keyEventCode) {
-		InputConnection currentInputConnection = SERVICE.getCurrentInputConnection();
-		currentInputConnection.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, keyEventCode));
-		currentInputConnection.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, keyEventCode));
-	}
-
-	@Override
-	public void onPress(int primaryCode) {
 	}
 
 	@Override
@@ -153,6 +151,7 @@ public class VoiceKeyboardActionListener implements KeyboardView.OnKeyboardActio
 
 	@Override
 	public void onError(int error) {
+		speechRecognizer.destroy();
 		ArrayList<String> errorMessages = new ArrayList<>();
 		errorMessages.add("エラーが発生しました。");
 		errorMessages.add("code:" + error);
@@ -195,6 +194,7 @@ public class VoiceKeyboardActionListener implements KeyboardView.OnKeyboardActio
 
 	@Override
 	public void onResults(Bundle results) {
+		speechRecognizer.destroy();
 		final ArrayList<String> voices = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
 
 		voices.forEach(Log::d);

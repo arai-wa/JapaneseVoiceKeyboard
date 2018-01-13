@@ -7,13 +7,16 @@
 
 	<ListView
 			android:id="@+id/messages"
-			android:layout_height="wrap_content"
 			android:layout_alignParentBottom="true"
+			android:divider="@android:drawable/bottom_bar"
+			android:dividerHeight="@dimen/list_divider_height"
+			android:layout_height="wrap_content"
 			android:layout_width="match_parent"/>
 
 	<com.example.input.voice.VoiceKeyboardView
 			android:id="@+id/keyboard"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:keyBackground="@android:drawable/btn_default_small"
 			android:keyPreviewLayout="@null"/>
 </LinearLayout>

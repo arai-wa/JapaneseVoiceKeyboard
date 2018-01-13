@@ -4,4 +4,5 @@
 	<dimen name="keyboard_view">96dp</dimen>
 	<dimen name="common_text">16dp</dimen>
 	<dimen name="common_padding">12dp</dimen>
+	<dimen name="list_divider_height">1px</dimen>
 </resources>

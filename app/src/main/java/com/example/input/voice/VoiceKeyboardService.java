@@ -54,6 +54,12 @@ public class VoiceKeyboardService extends InputMethodService {
 		return inputView;
 	}
 
+
+	@Override
+	public void onFinishInputView(boolean finishingInput) {
+		super.onFinishInputView(finishingInput);
+	}
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		return super.onKeyDown(keyCode, event);
