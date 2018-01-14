@@ -17,7 +17,7 @@ android {
     buildToolsVersion "27.0.1"
 
     defaultConfig {
-        applicationId "com.example.input.list_element"
+        applicationId "com.example.japanese_voice_keyboard"
         minSdkVersion 25
         targetSdkVersion 27
         versionCode 1

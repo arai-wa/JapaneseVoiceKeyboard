@@ -14,18 +14,19 @@ public class VoiceKeyboardService extends InputMethodService {
 
 	private VoiceKeyboard mMyKeyboard;
 	private View inputView;
+	private ListView candidatesView;
 	private SpeechRecognizer speechRecognizer;
 
 	@Override
 	public void onInitializeInterface() {
 		super.onInitializeInterface();
-		mMyKeyboard = new VoiceKeyboard(this, R.layout.keyboard);
+		mMyKeyboard = new VoiceKeyboard(this, R.layout.keys);
 	}
 
 
 	@Override
 	public View onCreateInputView() {
-		inputView = getLayoutInflater().inflate(R.layout.input, null);
+		inputView = getLayoutInflater().inflate(R.layout.keyboard, null);
 
 		int permission = checkCallingOrSelfPermission(Manifest.permission.RECORD_AUDIO);
 		boolean permitted = permission == PackageManager.PERMISSION_GRANTED;
@@ -42,11 +43,17 @@ public class VoiceKeyboardService extends InputMethodService {
 	}
 
 	@Override
+	public View onCreateCandidatesView() {
+		candidatesView = (ListView) getLayoutInflater().inflate(R.layout.candidates_view, null);
+		setCandidatesViewShown(true);
+		return candidatesView;
+	}
+
+	@Override
 	public void onStartInputView(EditorInfo info, boolean restarting) {
 		super.onStartInputView(info, restarting);
-		ListView messages = inputView.findViewById(R.id.messages);
 		speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
-		VoiceKeyboardActionListener listener = new VoiceKeyboardActionListener(this, messages, speechRecognizer);
+		VoiceKeyboardActionListener listener = new VoiceKeyboardActionListener(this, candidatesView, speechRecognizer);
 		speechRecognizer.setRecognitionListener(listener);
 
 		VoiceKeyboardView keyboard = inputView.findViewById(R.id.keyboard);

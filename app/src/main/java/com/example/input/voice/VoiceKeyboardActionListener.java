@@ -196,11 +196,11 @@ public class VoiceKeyboardActionListener implements KeyboardView.OnKeyboardActio
 
 		voices.forEach(Log::d);
 
-		ArrayAdapter<String> adapter = new ArrayAdapter<>(SERVICE, R.layout.list_element, voices);
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(SERVICE, R.layout.candidate_element, voices);
 		MESSAGES.setAdapter(adapter);
 		MESSAGES.setOnItemClickListener((adapterView, view, i, l) -> {
 			SERVICE.getCurrentInputConnection().commitText(voices.get(i), 1);
-			MESSAGES.setAdapter(new ArrayAdapter<>(SERVICE, R.layout.list_element, new ArrayList<String>()));
+			MESSAGES.setAdapter(new ArrayAdapter<>(SERVICE, R.layout.candidate_element, new ArrayList<String>()));
 		});
 	}
 
