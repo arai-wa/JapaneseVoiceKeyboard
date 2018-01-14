@@ -4,41 +4,28 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.inputmethodservice.InputMethodService;
-import android.view.KeyEvent;
+import android.speech.SpeechRecognizer;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ListView;
 import com.example.input.voice.util.Log;
 
 public class VoiceKeyboardService extends InputMethodService {
 
 	private VoiceKeyboard mMyKeyboard;
-	private int mLastDisplayWidth;
-
-	@Override
-	public void onCreate() {
-		super.onCreate();
-	}
+	private View inputView;
+	private SpeechRecognizer speechRecognizer;
 
 	@Override
 	public void onInitializeInterface() {
 		super.onInitializeInterface();
-		if (mMyKeyboard != null) {
-			int displayWidth = getMaxWidth();
-			if (displayWidth == mLastDisplayWidth) return;
-			mLastDisplayWidth = displayWidth;
-		}
 		mMyKeyboard = new VoiceKeyboard(this, R.layout.keyboard);
 	}
 
+
 	@Override
 	public View onCreateInputView() {
-		View inputView = getLayoutInflater().inflate(R.layout.input, null);
-
-		ListView messages = inputView.findViewById(R.id.messages);
-
-		VoiceKeyboardView keyboard = inputView.findViewById(R.id.keyboard);
-		keyboard.setKeyboard(mMyKeyboard);
-		keyboard.setOnKeyboardActionListener(new VoiceKeyboardActionListener(this, messages));
+		inputView = getLayoutInflater().inflate(R.layout.input, null);
 
 		int permission = checkCallingOrSelfPermission(Manifest.permission.RECORD_AUDIO);
 		boolean permitted = permission == PackageManager.PERMISSION_GRANTED;
@@ -54,21 +41,22 @@ public class VoiceKeyboardService extends InputMethodService {
 		return inputView;
 	}
 
+	@Override
+	public void onStartInputView(EditorInfo info, boolean restarting) {
+		super.onStartInputView(info, restarting);
+		ListView messages = inputView.findViewById(R.id.messages);
+		speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+		VoiceKeyboardActionListener listener = new VoiceKeyboardActionListener(this, messages, speechRecognizer);
+		speechRecognizer.setRecognitionListener(listener);
+
+		VoiceKeyboardView keyboard = inputView.findViewById(R.id.keyboard);
+		keyboard.setKeyboard(mMyKeyboard);
+		keyboard.setOnKeyboardActionListener(listener);
+	}
 
 	@Override
 	public void onFinishInputView(boolean finishingInput) {
 		super.onFinishInputView(finishingInput);
-	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		return super.onKeyDown(keyCode, event);
-	}
-
-	@Override
-	public void onUpdateSelection(int oldSelStart, int oldSelEnd, int newSelStart, int newSelEnd,
-	                              int candidatesStart, int candidatesEnd) {
-		super.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd,
-				candidatesStart, candidatesEnd);
+		speechRecognizer.destroy();
 	}
 }

@@ -7,7 +7,6 @@
 
 	<ListView
 			android:id="@+id/messages"
-			android:layout_alignParentBottom="true"
 			android:divider="@android:drawable/bottom_bar"
 			android:dividerHeight="@dimen/list_divider_height"
 			android:layout_height="wrap_content"

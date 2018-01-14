@@ -22,11 +22,12 @@ public class VoiceKeyboardActionListener implements KeyboardView.OnKeyboardActio
 
 	private final InputMethodService SERVICE;
 	private final ListView MESSAGES;
-	private SpeechRecognizer speechRecognizer;
+	private final SpeechRecognizer SPEECH_RECOGNIZER;
 
-	protected VoiceKeyboardActionListener(InputMethodService service, ListView messages) {
+	protected VoiceKeyboardActionListener(InputMethodService service, ListView messages, SpeechRecognizer speechRecognizer) {
 		this.SERVICE = service;
 		this.MESSAGES = messages;
+		this.SPEECH_RECOGNIZER = speechRecognizer;
 	}
 
 	@Override
@@ -47,9 +48,7 @@ public class VoiceKeyboardActionListener implements KeyboardView.OnKeyboardActio
 		if (primaryCode == resources.getInteger(R.integer.voice)) {
 			Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 			intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-			speechRecognizer = SpeechRecognizer.createSpeechRecognizer(SERVICE.getApplicationContext());
-			speechRecognizer.setRecognitionListener(this);
-			speechRecognizer.startListening(intent);
+			SPEECH_RECOGNIZER.startListening(intent);
 
 		} else if (primaryCode == resources.getInteger(R.integer.delete)) {
 			keyDownUp(KeyEvent.KEYCODE_DEL);
@@ -151,7 +150,6 @@ public class VoiceKeyboardActionListener implements KeyboardView.OnKeyboardActio
 
 	@Override
 	public void onError(int error) {
-		speechRecognizer.destroy();
 		ArrayList<String> errorMessages = new ArrayList<>();
 		errorMessages.add("エラーが発生しました。");
 		errorMessages.add("code:" + error);
@@ -194,7 +192,6 @@ public class VoiceKeyboardActionListener implements KeyboardView.OnKeyboardActio
 
 	@Override
 	public void onResults(Bundle results) {
-		speechRecognizer.destroy();
 		final ArrayList<String> voices = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
 
 		voices.forEach(Log::d);
