@@ -14,4 +14,10 @@
 	<integer name="maru_kakkotozi">10011</integer>
 	<integer name="bikkuri">10012</integer>
 	<integer name="hatena">10013</integer>
+	<integer name="right">10014</integer>
+	<integer name="left">10015</integer>
+	<integer name="sharp">10016</integer>
+	<integer name="half_space">10017</integer>
+	<integer name="asterisk">10018</integer>
+	<integer name="nakaguro">10019</integer>
 </resources>

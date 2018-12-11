@@ -7,10 +7,19 @@
 		  android:layout_width="match_parent">
 
 	<Row>
-		<Key android:codes="@integer/space" android:keyLabel="\u2423" android:keyWidth="20%p"/>
-		<Key android:codes="@integer/tenntenntenn" android:keyLabel="……" android:keyWidth="20%p"/>
-		<Key android:codes="@integer/voice" android:keyLabel="Voice" android:keyWidth="40%p"/>
+		<Key android:codes="@integer/sharp" android:keyLabel="#" android:keyWidth="20%p"/>
+		<Key android:codes="@integer/asterisk" android:keyLabel="*" android:keyWidth="20%p"/>
+		<Key android:codes="@integer/half_space" android:keyLabel="\u2423" android:keyWidth="20%p"/>
+		<Key android:codes="@integer/voice" android:keyLabel="Voice" android:keyWidth="20%p"/>
 		<Key android:codes="@integer/delete" android:keyLabel="Delete" android:keyWidth="20%p"/>
+	</Row>
+
+	<Row>
+		<Key android:codes="@integer/left" android:keyLabel="◀" android:keyWidth="20%p"/>
+		<Key android:codes="@integer/space" android:keyLabel="□" android:keyWidth="20%p"/>
+		<Key android:codes="@integer/nakaguro" android:keyLabel="・" android:keyWidth="20%p"/>
+		<Key android:codes="@integer/tenntenntenn" android:keyLabel="……" android:keyWidth="20%p"/>
+		<Key android:codes="@integer/right" android:keyLabel="▶" android:keyWidth="20%p"/>
 	</Row>
 
 	<Row>

@@ -89,6 +89,24 @@ public class VoiceKeyboardActionListener implements KeyboardView.OnKeyboardActio
 		} else if (primaryCode == resources.getInteger(R.integer.hatena)) {
 			currentInputConnection.commitText("？", 1);
 
+		} else if (primaryCode == resources.getInteger(R.integer.right)) {
+			keyDownUp(KeyEvent.KEYCODE_DPAD_RIGHT);
+
+		} else if (primaryCode == resources.getInteger(R.integer.left)) {
+			keyDownUp(KeyEvent.KEYCODE_DPAD_LEFT);
+
+		} else if (primaryCode == resources.getInteger(R.integer.sharp)) {
+			currentInputConnection.commitText("#", 1);
+
+		} else if (primaryCode == resources.getInteger(R.integer.half_space)) {
+			currentInputConnection.commitText(" ", 1);
+
+		} else if (primaryCode == resources.getInteger(R.integer.asterisk)) {
+			currentInputConnection.commitText("*", 1);
+
+		} else if (primaryCode == resources.getInteger(R.integer.nakaguro)) {
+			currentInputConnection.commitText("・", 1);
+
 		} else {
 			Toast.makeText(SERVICE, "invalid primary code: " + primaryCode, Toast.LENGTH_SHORT).show();
 		}
